@@ -1,13 +1,18 @@
 // import { AppModule } from './app/app.module';
 import { AppComponentFac } from './app/app.component';
 import { environment } from './environments/environment';
+import { enableProdMode, ɵrenderComponent as renderComponent} from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
 
 import '@angular/compiler';
 
+console.debug('enableProdMode', enableProdMode);
+
 (async _ => {
 
-  const enableProdMode = await import('@angular/core').then(m => m.enableProdMode);
-  const renderComponent = await import('@angular/core').then(m => m.ɵrenderComponent);
+  // const enableProdMode = await import('@angular/core').then(m => m.enableProdMode);
+  // const renderComponent = await import('@angular/core').then(m => m.ɵrenderComponent);
 
   // const enableProdMode = require('@angular/core').enableProdMode;
   // const renderComponent = require('@angular/core').ɵrenderComponent;

@@ -6,6 +6,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const path = require("path");
 const webpack = require("webpack");
+const VirtualBootstrapPlugin = require("./virtual-bootstrap-plugin");
+
 
 const shellConfig = {
   entry: ["./projects/shell/src/polyfills.ts", "./projects/shell/src/main.ts"],
@@ -52,7 +54,7 @@ const shellConfig = {
       },
       shared: ["@angular/core", "@angular/common"]
     }),
-
+    new VirtualBootstrapPlugin(),
     new AotPlugin({
       skipCodeGeneration: false,
       tsConfigPath: "./projects/shell/tsconfig.app.json",
@@ -127,7 +129,6 @@ const mfe1Config = {
       },
       shared: ["@angular/core", "@angular/common"]
     }),
-
     new AotPlugin({
       skipCodeGeneration: false,
       tsConfigPath: "./projects/mfe1/tsconfig.app.json",
@@ -140,7 +141,6 @@ const mfe1Config = {
         "./projects/mfe1/src/app/app.module#AppModule"
       )
     }),
-
     new HtmlWebpackPlugin({
       template: "./projects/mfe1/src/index.html"
     })
@@ -154,5 +154,5 @@ const mfe1Config = {
   mode: "none"
 };
 
-module.exports = [shellConfig, mfe1Config];
-// module.exports = shellConfig;
+//module.exports = [shellConfig, mfe1Config];
+module.exports = shellConfig;
