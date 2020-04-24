@@ -1,17 +1,27 @@
-// const Component = await import('@angular/core').then(m => m.Component);
-// declare const require: any;
+import {Component, ViewChild, ViewContainerRef, Inject, Injector, ComponentFactoryResolver} from '@angular/core';
 
-export async function AppComponentFac() {
+@Component({
+  selector: 'app-root',
+  templateUrl: 'app.component.html'
+})
+export class AppComponent {
 
-  const Component = await import('@angular/core').then(m => m.Component);
+  @ViewChild('vc', { read: ViewContainerRef, static: true })
+  viewContainer: ViewContainerRef;
 
-  @Component({
-    selector: 'app-root',
-    template: '<h1>Microfrontend 1</h1>'
-  })
-  class AppComponent {
+  constructor(
+    @Inject(Injector) private injector,
+    @Inject(ComponentFactoryResolver) private cfr) { }
+
+  search() {
+    alert('Not implemented for this demo!');
   }
 
-  return AppComponent;
+  async terms() {
+    const comp = await import('./lazy/lazy.component').then(m => m.LazyComponent);
+
+    const factory = this.cfr.resolveComponentFactory(comp);
+    this.viewContainer.createComponent(factory, null, this.injector);
+  }
 
 }

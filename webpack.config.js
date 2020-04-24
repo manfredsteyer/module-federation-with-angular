@@ -1,13 +1,8 @@
 const AotPlugin = require("@ngtools/webpack").AngularCompilerPlugin;
-// TypeScript-Kompilierung + AOT
-
-const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-
 const path = require("path");
-const webpack = require("webpack");
-const VirtualBootstrapPlugin = require("./virtual-bootstrap-plugin");
-
+const ContainerReferencePlugin = require("webpack/lib/container/ContainerReferencePlugin");
+const ContainerPlugin = require("webpack/lib/container/ContainerPlugin");
 
 const shellConfig = {
   entry: ["./projects/shell/src/polyfills.ts", "./projects/shell/src/main.ts"],
@@ -20,54 +15,26 @@ const shellConfig = {
   },  
   module: {
     rules: [
-      { test: /\.ts$/, loader: "@ngtools/webpack" },
-      { test: /\.html$/, loader: "html-loader" },
-      {
-        test: /\.css$/,
-        use: [
-          "style-loader",
-          {
-            loader: "css-loader",
-            options: {
-              sourceMap: false,
-              import: false
-            }
-          }
-        ]
-      },
-
-      {
-        test: /\.js$/,
-        loader: "@angular-devkit/build-optimizer/webpack-loader",
-        options: {
-          sourceMap: false
-        }
-      }
+      { test: /\.ts$/, loader: "@ngtools/webpack" }
     ]
   },
   plugins: [
-    new ModuleFederationPlugin({
-      name: "shell",
-      library: { type: "var", name: "shell" },
+    new ContainerReferencePlugin({
+      remoteType: 'var',
       remotes: {
         mfe1: "mfe1"
       },
-      shared: ["@angular/core", "@angular/common"]
+      overrides: ["@angular/core", "@angular/common"]
     }),
-    new VirtualBootstrapPlugin(),
     new AotPlugin({
       skipCodeGeneration: false,
       tsConfigPath: "./projects/shell/tsconfig.app.json",
-      // hostReplacementPaths: {
-      //   "./src/environments/environment.ts":
-      //   "./src/environments/environment.prod.ts"
-      // },
+      directTemplateLoading: true,
       entryModule: path.resolve(
         __dirname,
         "./projects/shell/src/app/app.module#AppModule"
       )
     }),
-
     new HtmlWebpackPlugin({
       template: "./projects/shell/src/index.html"
     })
@@ -91,51 +58,23 @@ const mfe1Config = {
   },  
   module: {
     rules: [
-      { test: /\.ts$/, loader: "@ngtools/webpack" },
-      { test: /\.html$/, loader: "html-loader" },
-      {
-        test: /\.css$/,
-        use: [
-          "style-loader",
-          {
-            loader: "css-loader",
-            options: {
-              sourceMap: false,
-              import: false
-            }
-          }
-        ]
-      },
-
-      {
-        test: /\.js$/,
-        loader: "@angular-devkit/build-optimizer/webpack-loader",
-        options: {
-          sourceMap: false
-        }
-      }
+      { test: /\.ts$/, loader: "@ngtools/webpack" }
     ]
   },
   plugins: [
-    new ModuleFederationPlugin({
+    new ContainerPlugin({
       name: "mfe1",
       filename: "remoteEntry.js",
       exposes: {
         Component: './projects/mfe1/src/app/app.component.ts'
       },
       library: { type: "var", name: "mfe1" },
-      remotes: {
-        mfe1: "mfe1"
-      },
-      shared: ["@angular/core", "@angular/common"]
+      overridables: ["@angular/core", "@angular/common"]
     }),
     new AotPlugin({
       skipCodeGeneration: false,
       tsConfigPath: "./projects/mfe1/tsconfig.app.json",
-      // hostReplacementPaths: {
-      //   "./src/environments/environment.ts":
-      //     "./src/environments/environment.prod.ts"
-      // },
+      directTemplateLoading: true,
       entryModule: path.resolve(
         __dirname,
         "./projects/mfe1/src/app/app.module#AppModule"
@@ -154,5 +93,4 @@ const mfe1Config = {
   mode: "none"
 };
 
-//module.exports = [shellConfig, mfe1Config];
-module.exports = shellConfig;
+module.exports = [shellConfig, mfe1Config];

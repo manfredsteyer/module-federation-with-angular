@@ -12,13 +12,14 @@ exports.default  = {
         delete cfg.sockPath;
         // delete cfg.optimization;
 
-        for (var plugin of cfg.plugins) {
-            console.debug('loader', plugin.constructor.name);
+        for (var rule of cfg.module.rules) {
+          //  console.debug('rule', rule);
         }
         
+        console.debug('options', cfg.module.rules[7].use[1].options);
+        //console.debug('cfg', cfg);
         
 
-        console.debug('config', cfg);
         return cfg;
     },
     pre: function () {
