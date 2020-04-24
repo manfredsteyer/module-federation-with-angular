@@ -19,12 +19,13 @@ const shellConfig = {
     ]
   },
   plugins: [
+    // ContainerReferencePlugin for Host allows to statically import shared libs
     new ContainerReferencePlugin({
       remoteType: 'var',
       remotes: {
         mfe1: "mfe1"
       },
-      overrides: ["@angular/core", "@angular/common"]
+      overrides: ["@angular/core", "@angular/common", "@angular/router"]
     }),
     new AotPlugin({
       skipCodeGeneration: false,
@@ -62,14 +63,17 @@ const mfe1Config = {
     ]
   },
   plugins: [
+    // ContainerPlugin for Remote does not allow to statically import shared libs
+    // See main.ts for workaround
     new ContainerPlugin({
       name: "mfe1",
       filename: "remoteEntry.js",
       exposes: {
-        Component: './projects/mfe1/src/app/app.component.ts'
+        Component: './projects/mfe1/src/app/app.component.ts',
+        Module: './projects/mfe1/src/app/flights/flights.module.ts'
       },
       library: { type: "var", name: "mfe1" },
-      overridables: ["@angular/core", "@angular/common"]
+      overridables: ["@angular/core", "@angular/common", "@angular/router"]
     }),
     new AotPlugin({
       skipCodeGeneration: false,

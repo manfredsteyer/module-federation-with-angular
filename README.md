@@ -1,6 +1,6 @@
 # FederationDemo
 
-Demonstrates webpack 5 Module Federation with Angular.
+Demonstrates webpack 5 Module Federation with Angular and the Angular Router.
 
 ## Start
 

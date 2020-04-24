@@ -1,7 +1,7 @@
 <ul>
-    <li><a (click)="home()">Home</a></li>
-    <li><a (click)="load()">Flights</a></li>
+    <li><a routerLink="/">Home</a></li>
+    <li><a routerLink="/flights/flights-search">Flights</a></li>
 </ul>
 
-<p #vc></p>
+<router-outlet></router-outlet>
 

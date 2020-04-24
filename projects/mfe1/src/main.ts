@@ -10,7 +10,8 @@
 
 Promise.all([
   import('@angular/core'),
-  import('@angular/common')
+  import('@angular/common'),
+  import('@angular/router'),
 ])
 .then(_ => import('./bootstrap'))
 .catch(err => console.error('error', err));

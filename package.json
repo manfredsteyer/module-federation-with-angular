@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "build": "webpack",
-    "serve:dist": "concurrently \"serve dist/shell -l 5000 -s\" \"serve dist/mfe1 -l 3000 -s\" "
+    "serve:dist": "concurrently \"serve dist/shell -l 5000 -s\" \"serve dist/mfe1 -l 3000 -s\" ",
+    "start": "echo Make sure to build before calling start && npm run serve:dist"
   },
   "private": true,
   "dependencies": {
