@@ -4,6 +4,10 @@ const path = require("path");
 const ContainerReferencePlugin = require("webpack/lib/container/ContainerReferencePlugin");
 const ContainerPlugin = require("webpack/lib/container/ContainerPlugin");
 
+const VirtualBootstrapPlugin = require("./virtual-bootstrap-plugin");
+
+
+
 const shellConfig = {
   entry: ["./projects/shell/src/polyfills.ts", "./projects/shell/src/main.ts"],
   resolve: {
@@ -65,6 +69,7 @@ const mfe1Config = {
   plugins: [
     // ContainerPlugin for Remote does not allow to statically import shared libs
     // See main.ts for workaround
+    new VirtualBootstrapPlugin(),
     new ContainerPlugin({
       name: "mfe1",
       filename: "remoteEntry.js",

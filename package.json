@@ -67,6 +67,7 @@
     "webpack": "git://github.com/webpack/webpack.git#dev-1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
-    "webpack-virtual-modules": "^0.2.1"
+    "webpack-log": "^3.0.1",
+    "webpack-virtual-modules": "^0.2.2"
   }
 }
