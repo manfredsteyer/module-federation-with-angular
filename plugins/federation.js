@@ -16,8 +16,8 @@ exports.default  = {
           //  console.debug('rule', rule);
         }
         
-        console.debug('options', cfg.module.rules[7].use[1].options);
-        //console.debug('cfg', cfg);
+        //console.debug('options', cfg.module.rules[7].use[1].options);
+        console.debug('cfg', cfg);
         
 
         return cfg;

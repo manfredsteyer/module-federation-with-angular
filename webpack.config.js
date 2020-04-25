@@ -45,7 +45,7 @@ const shellConfig = {
     path: __dirname + "/dist/shell",
     chunkFilename: "[id].[chunkhash].js"
   },
-  mode: "none"
+  mode: "production"
 };
 
 const mfe1Config = {
@@ -94,7 +94,7 @@ const mfe1Config = {
     path: __dirname + "/dist/mfe1",
     chunkFilename: "[id].[chunkhash].js"
   },
-  mode: "none"
+  mode: "production"
 };
 
 module.exports = [shellConfig, mfe1Config];
