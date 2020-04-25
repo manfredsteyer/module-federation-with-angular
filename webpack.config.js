@@ -1,8 +1,9 @@
 const AotPlugin = require("@ngtools/webpack").AngularCompilerPlugin;
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
-const ContainerReferencePlugin = require("webpack/lib/container/ContainerReferencePlugin");
-const ContainerPlugin = require("webpack/lib/container/ContainerPlugin");
+// const ContainerReferencePlugin = require("webpack/lib/container/ContainerReferencePlugin");
+// const ContainerPlugin = require("webpack/lib/container/ContainerPlugin");
+const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 
 const shellConfig = {
   entry: ["./projects/shell/src/polyfills.ts", "./projects/shell/src/main.ts"],
@@ -20,13 +21,23 @@ const shellConfig = {
   },
   plugins: [
     // ContainerReferencePlugin for Host allows to statically import shared libs
-    new ContainerReferencePlugin({
-      remoteType: 'var',
+    // new ContainerReferencePlugin({
+    //   remoteType: 'var',
+    //   remotes: {
+    //     mfe1: "mfe1"
+    //   },
+    //   overrides: ["@angular/core", "@angular/common", "@angular/router"]
+    // }),
+
+    new ModuleFederationPlugin({
+      name: "shell",
+      library: { type: "var", name: "shell" },
       remotes: {
         mfe1: "mfe1"
       },
-      overrides: ["@angular/core", "@angular/common", "@angular/router"]
-    }),
+      shared: ["@angular/core", "@angular/common", "@angular/router"]
+    }),    
+    
     new AotPlugin({
       skipCodeGeneration: false,
       tsConfigPath: "./projects/shell/tsconfig.app.json",
@@ -65,16 +76,28 @@ const mfe1Config = {
   plugins: [
     // ContainerPlugin for Remote does not allow to statically import shared libs
     // See main.ts for workaround
-    new ContainerPlugin({
+    // new ContainerPlugin({
+    //   name: "mfe1",
+    //   filename: "remoteEntry.js",
+    //   exposes: {
+    //     Component: './projects/mfe1/src/app/app.component.ts',
+    //     Module: './projects/mfe1/src/app/flights/flights.module.ts'
+    //   },
+    //   library: { type: "var", name: "mfe1" },
+    //   overridables: ["@angular/core", "@angular/common", "@angular/router"]
+    // }),
+
+    new ModuleFederationPlugin({
       name: "mfe1",
+      library: { type: "var", name: "mfe1" },
       filename: "remoteEntry.js",
       exposes: {
         Component: './projects/mfe1/src/app/app.component.ts',
         Module: './projects/mfe1/src/app/flights/flights.module.ts'
       },
-      library: { type: "var", name: "mfe1" },
-      overridables: ["@angular/core", "@angular/common", "@angular/router"]
+      shared: ["@angular/core", "@angular/common", "@angular/router"]
     }),
+
     new AotPlugin({
       skipCodeGeneration: false,
       tsConfigPath: "./projects/mfe1/tsconfig.app.json",
