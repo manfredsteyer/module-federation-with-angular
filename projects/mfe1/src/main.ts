@@ -8,12 +8,4 @@
 // the rest of the application.
 //
 
-// Promise.all([
-//   import('@angular/core'),
-//   import('@angular/common'),
-//   import('@angular/router'),
-// ])
-// .then(_ => import('./bootstrap'))
-// .catch(err => console.error('error', err));
-
 import('./bootstrap');

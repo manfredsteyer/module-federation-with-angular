@@ -3,24 +3,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
+import { APP_ROUTES } from './app.routes';
 
 @NgModule({
   imports: [
     BrowserModule,
-    RouterModule.forRoot([
-      {
-        path: '',
-        component: HomeComponent,
-        pathMatch: 'full'
-      },
-      {
-        path: 'flights',
-        loadChildren: () => import('mfe1/Module').then(m => { 
-          return m.FlightsModule;
-        })
-
-      },
-    ])
+    RouterModule.forRoot(APP_ROUTES)
   ],
   declarations: [
     AppComponent,

@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 const ContainerReferencePlugin = require("webpack/lib/container/ContainerReferencePlugin");
 const ContainerPlugin = require("webpack/lib/container/ContainerPlugin");
+const CopyPlugin = require('copy-webpack-plugin');
 
 const shellConfig = {
   entry: ["./projects/shell/src/polyfills.ts", "./projects/shell/src/main.ts"],
@@ -23,7 +24,7 @@ const shellConfig = {
     new ContainerReferencePlugin({
       remoteType: 'var',
       remotes: {
-        mfe1: "mfe1"
+        mfe1: "mfe1" 
       },
       overrides: ["@angular/core", "@angular/common", "@angular/router"]
     }),
@@ -36,6 +37,9 @@ const shellConfig = {
         "./projects/shell/src/app/app.module#AppModule"
       )
     }),
+    new CopyPlugin([
+      { from: 'projects/shell/src/assets', to: 'assets' },
+    ]),    
     new HtmlWebpackPlugin({
       template: "./projects/shell/src/index.html"
     })
@@ -84,6 +88,9 @@ const mfe1Config = {
         "./projects/mfe1/src/app/app.module#AppModule"
       )
     }),
+    new CopyPlugin([
+      { from: 'projects/mfe1/src/assets', to: 'assets' },
+    ]),    
     new HtmlWebpackPlugin({
       template: "./projects/mfe1/src/index.html"
     })
