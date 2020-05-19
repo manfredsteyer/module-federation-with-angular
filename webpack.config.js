@@ -16,7 +16,7 @@ const shellConfig = {
   },  
   module: {
     rules: [
-      { test: /\.ts$/, loader: "@ngtools/webpack" }
+      { test: /\.ts$/, loader: "ts-loader" }
     ]
   },
   plugins: [
@@ -28,18 +28,18 @@ const shellConfig = {
       },
       overrides: ["@angular/core", "@angular/common", "@angular/router"]
     }),
-    new AotPlugin({
-      skipCodeGeneration: false,
-      tsConfigPath: "./projects/shell/tsconfig.app.json",
-      directTemplateLoading: true,
-      entryModule: path.resolve(
-        __dirname,
-        "./projects/shell/src/app/app.module#AppModule"
-      )
-    }),
-    new CopyPlugin([
-      { from: 'projects/shell/src/assets', to: 'assets' },
-    ]),    
+    // new AotPlugin({
+    //   skipCodeGeneration: false,
+    //   tsConfigPath: "./projects/shell/tsconfig.app.json",
+    //   directTemplateLoading: true,
+    //   entryModule: path.resolve(
+    //     __dirname,
+    //     "./projects/shell/src/app/app.module#AppModule"
+    //   )
+    // }),
+    // new CopyPlugin([
+    //   { from: 'projects/shell/src/assets', to: 'assets' },
+    // ]),    
     new HtmlWebpackPlugin({
       template: "./projects/shell/src/index.html"
     })
@@ -63,31 +63,31 @@ const mfe1Config = {
   },  
   module: {
     rules: [
-      { test: /\.ts$/, loader: "@ngtools/webpack" }
+      { test: /\.ts$/, loader: "ts-loader" }
     ]
   },
   plugins: [
     // ContainerPlugin for Remote does not allow to statically import shared libs
     // See main.ts for workaround
-    new ContainerPlugin({
-      name: "mfe1",
-      filename: "remoteEntry.js",
-      exposes: {
-        Component: './projects/mfe1/src/app/app.component.ts',
-        Module: './projects/mfe1/src/app/flights/flights.module.ts'
-      },
-      library: { type: "var", name: "mfe1" },
-      overridables: ["@angular/core", "@angular/common", "@angular/router"]
-    }),
-    new AotPlugin({
-      skipCodeGeneration: false,
-      tsConfigPath: "./projects/mfe1/tsconfig.app.json",
-      directTemplateLoading: true,
-      entryModule: path.resolve(
-        __dirname,
-        "./projects/mfe1/src/app/app.module#AppModule"
-      )
-    }),
+    // new ContainerPlugin({
+    //   name: "mfe1",
+    //   filename: "remoteEntry.js",
+    //   exposes: {
+    //     Component: './projects/mfe1/src/app/app.component.ts',
+    //     Module: './projects/mfe1/src/app/flights/flights.module.ts'
+    //   },
+    //   library: { type: "var", name: "mfe1" },
+    //   overridables: ["@angular/core", "@angular/common", "@angular/router"]
+    // }),
+    // new AotPlugin({
+    //   skipCodeGeneration: false,
+    //   tsConfigPath: "./projects/mfe1/tsconfig.app.json",
+    //   directTemplateLoading: true,
+    //   entryModule: path.resolve(
+    //     __dirname,
+    //     "./projects/mfe1/src/app/app.module#AppModule"
+    //   )
+    // }),
     new CopyPlugin([
       { from: 'projects/mfe1/src/assets', to: 'assets' },
     ]),    
