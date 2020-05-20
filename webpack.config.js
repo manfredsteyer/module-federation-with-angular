@@ -1,9 +1,11 @@
 const AotPlugin = require("@ngtools/webpack").AngularCompilerPlugin;
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
-const ContainerReferencePlugin = require("webpack/lib/container/ContainerReferencePlugin");
-const ContainerPlugin = require("webpack/lib/container/ContainerPlugin");
+const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const CopyPlugin = require('copy-webpack-plugin');
+
+// const ContainerReferencePlugin = require("webpack/lib/container/ContainerReferencePlugin");
+// const ContainerPlugin = require("webpack/lib/container/ContainerPlugin");
 
 const shellConfig = {
   entry: ["./projects/shell/src/polyfills.ts", "./projects/shell/src/main.ts"],
@@ -16,30 +18,28 @@ const shellConfig = {
   },  
   module: {
     rules: [
-      { test: /\.ts$/, loader: "ts-loader" }
+      { test: /\.ts$/, loader: "@ngtools/webpack" }
     ]
   },
   plugins: [
-    // ContainerReferencePlugin for Host allows to statically import shared libs
-    new ContainerReferencePlugin({
-      remoteType: 'var',
+    new ModuleFederationPlugin({
       remotes: {
         mfe1: "mfe1" 
       },
-      overrides: ["@angular/core", "@angular/common", "@angular/router"]
+      shared: ["@angular/core", "@angular/common", "@angular/router"]
     }),
-    // new AotPlugin({
-    //   skipCodeGeneration: false,
-    //   tsConfigPath: "./projects/shell/tsconfig.app.json",
-    //   directTemplateLoading: true,
-    //   entryModule: path.resolve(
-    //     __dirname,
-    //     "./projects/shell/src/app/app.module#AppModule"
-    //   )
-    // }),
-    // new CopyPlugin([
-    //   { from: 'projects/shell/src/assets', to: 'assets' },
-    // ]),    
+    new AotPlugin({
+      skipCodeGeneration: false,
+      tsConfigPath: "./projects/shell/tsconfig.app.json",
+      directTemplateLoading: true,
+      entryModule: path.resolve(
+        __dirname,
+        "./projects/shell/src/app/app.module#AppModule"
+      )
+    }),
+    new CopyPlugin([
+      { from: 'projects/shell/src/assets', to: 'assets' },
+    ]),    
     new HtmlWebpackPlugin({
       template: "./projects/shell/src/index.html"
     })
@@ -63,31 +63,29 @@ const mfe1Config = {
   },  
   module: {
     rules: [
-      { test: /\.ts$/, loader: "ts-loader" }
+      { test: /\.ts$/, loader: "@ngtools/webpack" }
     ]
   },
   plugins: [
-    // ContainerPlugin for Remote does not allow to statically import shared libs
-    // See main.ts for workaround
-    // new ContainerPlugin({
-    //   name: "mfe1",
-    //   filename: "remoteEntry.js",
-    //   exposes: {
-    //     Component: './projects/mfe1/src/app/app.component.ts',
-    //     Module: './projects/mfe1/src/app/flights/flights.module.ts'
-    //   },
-    //   library: { type: "var", name: "mfe1" },
-    //   overridables: ["@angular/core", "@angular/common", "@angular/router"]
-    // }),
-    // new AotPlugin({
-    //   skipCodeGeneration: false,
-    //   tsConfigPath: "./projects/mfe1/tsconfig.app.json",
-    //   directTemplateLoading: true,
-    //   entryModule: path.resolve(
-    //     __dirname,
-    //     "./projects/mfe1/src/app/app.module#AppModule"
-    //   )
-    // }),
+    new ModuleFederationPlugin({
+      name: "mfe1",
+      library: { type: "var", name: "mfe1" },
+      filename: "remoteEntry.js",
+      exposes: {
+        Component: './projects/mfe1/src/app/app.component.ts',
+        Module: './projects/mfe1/src/app/flights/flights.module.ts'
+      },
+      shared: ["@angular/core", "@angular/common", "@angular/router"]
+    }),
+    new AotPlugin({
+      skipCodeGeneration: false,
+      tsConfigPath: "./projects/mfe1/tsconfig.app.json",
+      directTemplateLoading: true,
+      entryModule: path.resolve(
+        __dirname,
+        "./projects/mfe1/src/app/app.module#AppModule"
+      )
+    }),
     new CopyPlugin([
       { from: 'projects/mfe1/src/assets', to: 'assets' },
     ]),    
